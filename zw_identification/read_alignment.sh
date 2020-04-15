@@ -17,3 +17,5 @@ samtools index -@ $cpu $genome.$sample.sorted.bam
 # mark duplication, please modify the path of picard.jar
 java -Xmx108g -jar /apps/picard/2.21.4/picard.jar  MarkDuplicates I=$genome.$sample.sorted.bam O=$genome.$sample.dedup.bam M=$sample.m
 samtools index -@ $cpu  $genome.$sample.dedup.bam
+
+[ -f $genome.$sample.dedup.bam.bai ] && rm $genome.$sample.sorted.bam $genome.$sample.sorted.bam.bai $sample.m
