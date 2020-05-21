@@ -12,6 +12,8 @@ samtools depth -m 100 -Q 60  $bam | awk '{print $1"\t"$2-1"\t"$2"\t"$3}'  | bedt
 
 medianCov=$(cat $bam.cov-50k | awk '$6/($3-$2)>0.8' | cut -f 5 | sort -n | awk  { a[i++]=$1; } END { x=int((i+1)/2); if (x < (i+1)/2) print (a[x-1]+a[x])/2; else print a[x-1]; })
 
-cat $bam.cov-50k | awk '$6/($3-$2)>0.6' | awk -v medianCov=$medianCov '$5>medianCov/3 && $5<medianCov/3*2' | awk 'BEGIN{while(getline < "'$genome'.fai"){len[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/len[i]*100}}' > $bam.cov-50k.half-perc
+cat $bam.cov-50k | awk '$6/($3-$2)>0.6 && $3-$2>2000{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]}}' > $genome.2k-length
+
+cat $bam.cov-50k | awk '$6/($3-$2)>0.6 && $3-$2>2000' | awk -v medianCov=$medianCov '$5>medianCov/3 && $5<medianCov/3*2' | awk 'BEGIN{while(getline < "'$genome'.2k-length"){len[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/len[i]*100}}' > $bam.cov-50k.half-perc
 
 cat $bam.cov-50k.half-perc | awk '$2>0.8' > $bam.cov-50k.half-perc.list
