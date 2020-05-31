@@ -17,9 +17,9 @@ delta-filter -1 -l 400 ${ref}-$spe.delta > ${ref}-$spe.delta.filt
 show-coords -H -c -l -o -r -T ${ref}-$spe.delta.filt > ${ref}-$spe.delta.filt.coords
 
 # %alinged by chrZ
-cat  ${ref}-$spe.delta.filt.coords  | grep -w -f $ref_z - | awk '$5>500' | awk '$13>20000' | awk '$3<$4{print $13"\t"$3"\t"$4}$3>$4{print $13"\t"$4"\t"$3}' |  bedtools sort -i - | bedtools merge -i - -d 10000 |  awk 'BEGIN{while(getline < "'$spe'.fai"){b[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/b[i]*100"\t"b[i]}}' > ${ref}-$spe.delta.filt.coords.Z-perc
+cat  ${ref}-$spe.delta.filt.coords  | grep -w -f $ref_z - | awk '$5>500' | awk '$9>2000' | awk '$3<$4{print $13"\t"$3"\t"$4}$3>$4{print $13"\t"$4"\t"$3}' |  bedtools sort -i - | bedtools merge -i - -d 10000 |  awk 'BEGIN{while(getline < "'$spe'.fai"){b[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/b[i]*100"\t"b[i]}}' > ${ref}-$spe.delta.filt.coords.Z-perc
 # %aligned by autosome
-cat  ${ref}-$spe.delta.filt.coords  | grep -v -w -f $ref_z - | awk '$5>500' | awk '$13>20000' | awk '$3<$4{print $13"\t"$3"\t"$4}$3>$4{print $13"\t"$4"\t"$3}' |  bedtools sort -i - | bedtools merge -i - -d 10000 |  awk 'BEGIN{while(getline < "'$spe'.fai"){b[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/b[i]*100"\t"b[i]}}' > ${ref}-$spe.delta.filt.coords.A-perc
+cat  ${ref}-$spe.delta.filt.coords  | grep -v -w -f $ref_z - | awk '$5>500' | awk '$9>2000' | awk '$3<$4{print $13"\t"$3"\t"$4}$3>$4{print $13"\t"$4"\t"$3}' |  bedtools sort -i - | bedtools merge -i - -d 10000 |  awk 'BEGIN{while(getline < "'$spe'.fai"){b[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/b[i]*100"\t"b[i]}}' > ${ref}-$spe.delta.filt.coords.A-perc
 
 cat ${ref}-$spe.delta.filt.coords.Z-perc | awk 'BEGIN{while(getline < "'${ref}'-'$spe'.delta.filt.coords.A-perc"){a[$1]=$2}}{print $0"\t"$2-a[$1]}' > ${ref}-$spe.delta.filt.coords.ZsubA-perc
 
