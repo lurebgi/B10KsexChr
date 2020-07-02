@@ -16,4 +16,4 @@ cat $bam.cov-50k | awk '$6/($3-$2)>0.6 && $3-$2>2000{a[$1]+=$3-$2+1}END{for(i in
 
 cat $bam.cov-50k | awk '$6/($3-$2)>0.6 && $3-$2>2000' | awk -v medianCov=$medianCov '$5>medianCov/3 && $5<medianCov/3*2' | awk 'BEGIN{while(getline < "'$genome'.2k-length"){len[$1]=$2}}{a[$1]+=$3-$2+1}END{for(i in a){print i"\t"a[i]/len[i]*100}}' > $bam.cov-50k.half-perc
 
-cat $bam.cov-50k.half-perc | awk '$2>0.8' > $bam.cov-50k.half-perc.list
+cat $bam.cov-50k.half-perc | awk '$2>80' > $bam.cov-50k.half-perc.list
